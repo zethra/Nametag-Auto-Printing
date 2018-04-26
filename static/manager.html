@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nametag Manager</title>
+
+    <script src="assets/static/js/jquery.js"></script>
+		<script src="assets/static/js/underscore.js"></script>
+		<script src="assets/static/js/backbone.js"></script>
+		<script src="assets/static/js/backgrid.js"></script>
+
+    <link rel="stylesheet" href="assets/static/css/backgrid.css" type="text/css" media="screen">
+
+    <link rel="stylesheet" type="text/css" href="assets/static/css/styles.css">
+
+  </head>
+  <body>
+
+    <nav>
+      <img src="assets/images/icon.png"/>
+
+      <span class="btn" id="managerStart">Start Manager</span>
+      <span class="btn" id="managerStop">Stop Manager</span>
+      <span class="label" id="managerState">Loading...</span>
+      <span class="label" id="currentCommand"></span>
+    </nav>
+
+
+
+    <span id="printers">
+      <h2>Printers</h2>
+      <div id="printerTable" class="backgrid-container"></div>
+      <div>
+        <input type="text" id="printerInput">
+        <button id="printerAdd">Add</button>
+      </div>
+    </div>
+
+    <span id="nametags">
+      <h2>Nametags</h2>
+      <div id="nametagTable" class="backgrid-container"></div>
+      <div>
+        <input type="text" id="nametagInput">
+        <button id="nametagAdd">Add</button>
+      </div>
+    </div>
+
+    <script src="assets/static/js/manager.js" charset="utf-8"></script>
+
+  </body>
+</html>

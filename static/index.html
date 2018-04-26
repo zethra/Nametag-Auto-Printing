@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nametag App</title>
+    <link rel="stylesheet" type="text/css" href="static/css/styles.css">
+  </head>
+  <body>
+    <img id="img" src="static/images/blank.png"/>
+    <p class="title">Name:</p>
+    <input id="input" autofocus="true" maxLength=10 type="text">
+    <p id="subtitle">(10 characters or less, no \, #, or %)</p>
+    <div class="btns">
+      <button id="preview" onclick="preview()">Preview</button>
+      <button id="submit" onclick="submit()">Submit</button>
+    </div>
+    <p id="status">Ready.</p>
+
+    <script src="static/js/main.js" charset="utf-8"></script>
+
+  </body>
+</html>
