@@ -1,0 +1,10 @@
+/home/zethra/Projects/Personal/Nametag-Auto-Printing/frontend/index/target/release/deps/libserde_derive_internals-1e712e78733eb8fd.rlib: /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/lib.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/ast.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/attr.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/ctxt.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/case.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/check.rs
+
+/home/zethra/Projects/Personal/Nametag-Auto-Printing/frontend/index/target/release/deps/serde_derive_internals-1e712e78733eb8fd.d: /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/lib.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/ast.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/attr.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/ctxt.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/case.rs /home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/check.rs
+
+/home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/lib.rs:
+/home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/ast.rs:
+/home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/attr.rs:
+/home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/ctxt.rs:
+/home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/case.rs:
+/home/zethra/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive_internals-0.23.1/src/check.rs:

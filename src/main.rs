@@ -48,7 +48,7 @@ fn main() {
     let _ = env_logger::init();
 
     let conn = db::establish_connection();
-    db::new_printer(&conn, "test2", "green", "127.0.0.1", "api", "conf");
+    // db::new_printer(&conn, "test2", "green", "127.0.0.1", "api", "conf");
 
     let res = db::get_printers(&conn);
     println!("Displaying {} printers", res.len());
@@ -56,7 +56,7 @@ fn main() {
         println!("{}", printer.name);
     }
 
-    return;
+    // return;
 
     let sys = actix::System::new("json-example");
     let _addr = server::new(|| {
@@ -64,8 +64,8 @@ fn main() {
             // enable logger
             .middleware(middleware::Logger::default())
             // .resource("/", |r| r.method(Method::POST).f(index))})
-            .handler("/static/", fs::StaticFiles::new("./static/"))
-            .resource("/", |r| r.method(Method::GET).f(index))
+            .handler("/", fs::StaticFiles::new("./static/"))
+            // .resource("/", |r| r.method(Method::GET).f(index))
             .resource("/preview", |r| r.f(preview))
         })
         .bind("127.0.0.1:8080").unwrap()

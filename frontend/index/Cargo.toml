@@ -1,0 +1,9 @@
+[package]
+name = "index"
+version = "0.1.0"
+authors = ["zethra <jediben97@gmail.com>"]
+
+[dependencies]
+yew = "0.3"
+stdweb = "0.4"
+lazy_static = "1.0"
