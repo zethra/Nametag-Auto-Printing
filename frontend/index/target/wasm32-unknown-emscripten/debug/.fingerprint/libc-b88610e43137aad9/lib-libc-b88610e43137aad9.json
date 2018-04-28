@@ -1,1 +1,0 @@
-{"rustc":16349303590983159748,"features":"[\"default\", \"use_std\"]","target":5218373402463339046,"profile":2479238963835404001,"path":12372200374498873649,"deps":[],"local":[{"Precalculated":"0.2.40"}],"rustflags":["-C","link-arg=-s","-C","link-arg=NO_EXIT_RUNTIME=1","-C","link-arg=-s","-C","link-arg=ALLOW_MEMORY_GROWTH=1"],"edition":"Edition2015"}

@@ -1,1 +1,0 @@
-{"rustc":16349303590983159748,"features":"[]","target":9767580136877822527,"profile":9545352128866900522,"path":1036222786711178230,"deps":[["stdweb v0.4.4",4033438778117719229],["yew v0.3.0",4915495343559397611]],"local":[{"MtimeBased":[[1524930812,787237201],".fingerprint/frontend-68f9ee1c32769bbf/dep-bin-frontend-68f9ee1c32769bbf"]}],"rustflags":[],"edition":"Edition2015"}
