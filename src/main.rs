@@ -5,11 +5,14 @@ extern crate bytes;
 extern crate futures;
 extern crate env_logger;
 extern crate serde_json;
+extern crate diesel;
 #[macro_use] extern crate serde_derive;
 
 use actix_web::*;
 use actix_web::http::Method;
+use diesel::prelude::*;
 use nap::nametag;
+use nap::db;
 use std::fs::File;
 use std::io::Read;
 
@@ -43,8 +46,19 @@ fn preview(req: HttpRequest) -> Result<HttpResponse> {
 fn main() {
     ::std::env::set_var("RUST_LOG", "actix_web=info");
     let _ = env_logger::init();
-    let sys = actix::System::new("json-example");
 
+    let conn = db::establish_connection();
+    db::new_printer(&conn, "test2", "green", "127.0.0.1", "api", "conf");
+
+    let res = db::get_printers(&conn);
+    println!("Displaying {} printers", res.len());
+    for printer in res {
+        println!("{}", printer.name);
+    }
+
+    return;
+
+    let sys = actix::System::new("json-example");
     let _addr = server::new(|| {
         App::new()
             // enable logger

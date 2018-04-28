@@ -1,0 +1,12 @@
+CREATE TABLE printers (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    status VARCHAR NOT NULL,
+    active BOOLEAN NOT NULL DEFAULT 0,
+    selectable BOOLEAN NOT NULL DEFAULT 0,
+    nametag_id INTEGER,
+    color VARCHAR NOT NULL,
+    api_key VARCHAR NOT NULL,
+    ip VARCHAR NOT NULL,
+    slic3r_conf VARCHAR NOT NULL
+)
