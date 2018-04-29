@@ -1,6 +1,6 @@
 use super::schema::printers;
 
-#[derive(Queryable)]
+#[derive(Queryable, Serialize)]
 pub struct Printer {
     pub id: i32,
     pub name: String,
@@ -27,7 +27,7 @@ pub struct NewPrinter<'a> {
 
 use super::schema::nametags;
 
-#[derive(Queryable)]
+#[derive(Queryable, Serialize)]
 pub struct Nametag {
     pub id: i32,
     pub name: String,

@@ -15,6 +15,7 @@ use actix_web::*;
 use actix_web::http::Method;
 use nap::nametag;
 use nap::db;
+use nap::db::models::*;
 use std::fs::File;
 use std::io::Read;
 
@@ -34,10 +35,13 @@ fn preview(req: HttpRequest) -> Result<HttpResponse> {
     }
     // println!("{:?}", name);
     // TODO use tmp folder
-    nametag::preview(&name)?;
-    let file = format!("./{}.png", name);
-    println!("{}", file);
-    let mut file = File::open(&file)?;
+    let nt_path = match nametag::preview(&name) {
+        Ok(path) => path,
+        Err(e) => {
+            return Ok(HttpResponse::InternalServerError().body(e));
+        }
+    };
+    let mut file = File::open(&nt_path)?;
     let mut b = Vec::new();
     file.read_to_end(&mut b).unwrap();
     Ok(HttpResponse::Ok().body(b))
@@ -60,33 +64,34 @@ fn submit(form: Form<SubmitForm>) -> Result<HttpResponse> {
     Ok(HttpResponse::Ok().body("<status>Success</status>"))
 }
 
+fn list_printers(_: HttpRequest) -> Result<Json<Vec<Printer>>> {
+    let conn = db::establish_connection();
+    let res = db::get_printers(&conn);
+    Ok(Json(res))
+}
+
+fn list_nametags(_: HttpRequest) -> Result<Json<Vec<Nametag>>> {
+    let conn = db::establish_connection();
+    let res = db::get_nametags(&conn);
+    Ok(Json(res))
+}
+
 fn main() {
     ::std::env::set_var("RUST_LOG", "actix_web=info");
     let _ = env_logger::init();
 
     db::init();
 
-    // let conn = db::establish_connection();
-    // db::new_printer(&conn, "test2", "green", "127.0.0.1", "api", "conf");
-
-    // let res = db::get_printers(&conn);
-    // println!("Displaying {} printers", res.len());
-    // for printer in res {
-    //     println!("{}", printer.name);
-    // }
-
-    // return;
-
-    let sys = actix::System::new("json-example");
+    let sys = actix::System::new("nametag-auto-printing");
     let _addr = server::new(|| {
         App::new()
             // enable logger
             .middleware(middleware::Logger::default())
-            // .resource("/", |r| r.method(Method::POST).f(index))})
             .handler("/", fs::StaticFiles::new("./static/").index_file("index.html"))
-            // .resource("/", |r| r.method(Method::GET).f(index))
             .resource("/preview", |r| r.f(preview))
             .resource("/submit", |r| r.method(Method::POST).with(submit))
+            .handler("/printers", list_printers)
+            .handler("/nametags", list_nametags)
         })
         .bind("127.0.0.1:8080").unwrap()
         .shutdown_timeout(1)
