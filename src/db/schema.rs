@@ -12,3 +12,11 @@ table! {
         slic3r_conf -> Text,
     }
 }
+
+table! {
+    nametags (id) {
+        id -> Integer,
+        name -> Text,
+        comments -> Nullable<Text>,
+    }
+}

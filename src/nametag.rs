@@ -15,7 +15,7 @@ pub fn preview(name: &str) -> io::Result<ExitStatus> {
      Command::new("openscad")
         .arg("-o").arg(format!("{}.png", name))
         .args(&[format!("-D name=\"{}\"", name), 
-                format!("-D chars={}", name.len() + 1),
+                format!("-D chars={}", name.len()),
                 format!("--camera=0,0,0,0,0,0,{}", zoom)])
         .arg("--imgsize=512,400")
         .arg("openscad/name.scad")

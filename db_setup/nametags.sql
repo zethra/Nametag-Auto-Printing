@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS nametags (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    comments VARCHAR
+);

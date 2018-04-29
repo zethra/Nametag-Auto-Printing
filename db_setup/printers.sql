@@ -10,3 +10,4 @@ CREATE TABLE IF NOT EXISTS printers (
     ip VARCHAR NOT NULL,
     slic3r_conf VARCHAR NOT NULL
 );
+

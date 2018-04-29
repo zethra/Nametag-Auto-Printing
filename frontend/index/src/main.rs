@@ -2,15 +2,13 @@ extern crate stdweb;
 #[macro_use]
 extern crate yew;
 #[macro_use]
-extern crate lazy_static;
+extern crate serde_json;
 
 use yew::prelude::*;
 use yew::services::console::ConsoleService;
+use yew::services::fetch::{FetchService, Request, Response};
+use yew::format::{Json, Restorable};
 use stdweb::web::{IParentNode, document};
-
-lazy_static! {
-    static ref blank_image: &'static str = "blank.png";
-}
 
 pub struct Model {
     image: String,
@@ -21,20 +19,37 @@ pub enum Msg {
     Preview,
     Submit,
     Input(String),
+    Error,
+    Noop
 }
 
-impl<CTX> Component<CTX> for Model where CTX: AsMut<ConsoleService> {
+pub struct Context {
+    console: ConsoleService,
+    fetch: FetchService
+}
+
+impl AsMut<ConsoleService> for Context {
+    fn as_mut(&mut self) -> &mut ConsoleService {
+        &mut self.console
+    }
+}
+
+fn print_err<OUT: 'static>(resp: Response<OUT>) where OUT: From<Restorable> {
+
+}
+
+impl Component<Context> for Model {
     type Msg = Msg;
     type Properties = ();
 
-    fn create(_: Self::Properties, _: &mut Env<CTX, Self>) -> Self {
+    fn create(_: Self::Properties, _: &mut Env<Context, Self>) -> Self {
         Model {
-            image: blank_image.to_string(),
+            image: "blank.png".to_string(),
             input: "".to_string(),
         }
     }
 
-    fn update(&mut self, msg: Self::Msg, context: &mut Env<CTX, Self>) -> ShouldRender {
+    fn update(&mut self, msg: Self::Msg, context: &mut Env<Context, Self>) -> ShouldRender {
         match msg {
             Msg::Preview => {
                 self.image = format!("preview?name={}", self.input);
@@ -48,14 +63,19 @@ impl<CTX> Component<CTX> for Model where CTX: AsMut<ConsoleService> {
             },
             Msg::Submit => {
                 context.as_mut().log("Submit");
+                let req = Request::post("submit")
+                                    .header("Content-Type", "application/json")
+                                    .body(Json(&json!({"name": "Ben"})))
+                                    .expect("Failed to build request");
+                context.fetch.fetch(req, print_err.into());
             }
         }
         true
     }
 }
 
-impl<CTX> Renderable<CTX, Model> for Model where CTX: AsMut<ConsoleService> + 'static, {
-    fn view(&self) -> Html<CTX, Self> {
+impl Renderable<Context, Model> for Model {
+    fn view(&self) -> Html<Context, Self> {
         html! {
             <div>
                 <img id="img", src=&self.image,/>
@@ -73,20 +93,12 @@ impl<CTX> Renderable<CTX, Model> for Model where CTX: AsMut<ConsoleService> + 's
     }
 }
 
-pub struct Context {
-    console: ConsoleService,
-}
-
-impl AsMut<ConsoleService> for Context {
-    fn as_mut(&mut self) -> &mut ConsoleService {
-        &mut self.console
-    }
-}
 
 fn main() {
     yew::initialize();
     let context = Context {
         console: ConsoleService::new(),
+        fetch: FetchService::new()
     };
     let app: App<_, Model> = App::new(context);
     let mount_point = document().query_selector("#mount").unwrap().unwrap();
