@@ -4,7 +4,6 @@ extern crate actix_web;
 extern crate bytes;
 extern crate futures;
 extern crate env_logger;
-// extern crate serde_json;
 extern crate diesel;
 #[macro_use] 
 extern crate serde_derive;
@@ -96,9 +95,9 @@ fn main() {
 
     let sys = actix::System::new("nametag-auto-printing");
 
+    // Create conncection pool w 3 db connections
     let manager = establish_connection();
     let pool = r2d2::Pool::builder().build(manager).expect("Failed to create pool");
-
     let addr = SyncArbiter::start(3, move || {
         DbExecutor(pool.clone())
     });
@@ -110,7 +109,6 @@ fn main() {
             .handler("/", fs::StaticFiles::new("./static/").index_file("index.html"))
             .resource("/preview", |r| r.f(preview))
             .resource("/submit", |r| r.method(Method::POST).with2(submit))
-            // .handler("/printers", list_printers)
             .resource("/nametags", |r| r.f(list_nametags))
             .resource("/printers", |r| r.f(list_printers))
         })

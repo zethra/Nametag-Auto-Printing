@@ -1,9 +1,7 @@
 CREATE TABLE IF NOT EXISTS printers (
     id INTEGER NOT NULL PRIMARY KEY,
     name VARCHAR NOT NULL,
-    status VARCHAR NOT NULL,
-    active BOOLEAN NOT NULL DEFAULT 0,
-    selectable BOOLEAN NOT NULL DEFAULT 0,
+    status VARCHAR CHECK(status IN ('idle', 'printing', 'done', 'unavailable')) NOT NULL,
     nametag_id INTEGER,
     color VARCHAR NOT NULL,
     api_key VARCHAR NOT NULL,

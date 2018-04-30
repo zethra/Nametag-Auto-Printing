@@ -1,12 +1,11 @@
 use super::schema::printers;
+use super::schema::PrinterState;
 
-#[derive(Queryable, Serialize)]
+#[derive(Queryable, Serialize, Debug)]
 pub struct Printer {
     pub id: i32,
     pub name: String,
-    pub status: String,
-    pub active: bool,
-    pub selectable: bool,
+    pub status: PrinterState,
     pub nametag_id: Option<i32>,
     pub color: String,
     pub ip: String,
@@ -14,11 +13,11 @@ pub struct Printer {
     pub slic3r_conf: String
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, Debug)]
 #[table_name = "printers"]
 pub struct NewPrinter {
     pub name: String,
-    pub status: String,
+    pub status: PrinterState,
     pub color: String,
     pub ip: String,
     pub api_key: String,

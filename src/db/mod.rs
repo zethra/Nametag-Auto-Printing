@@ -37,11 +37,12 @@ pub fn init() {
     }
 }
 
-
 pub fn establish_connection() -> ConnectionManager<SqliteConnection> {
     let database_url = "nametag.db";
     ConnectionManager::<SqliteConnection>::new(database_url)
 }
+
+// NewPrinter
 
 impl Message for NewPrinter {
     type Result = Result<(), Error>;
@@ -62,6 +63,8 @@ impl Handler<NewPrinter> for DbExecutor {
     }
 }
 
+// GetPrinters
+
 pub struct GetPrinters;
 
 impl Message for GetPrinters {
@@ -78,6 +81,8 @@ impl Handler<GetPrinters> for DbExecutor {
         Ok(ret)
     }
 }
+
+// NewNametag
 
 impl Message for NewNametag {
     type Result = Result<(), Error>;
@@ -98,6 +103,8 @@ impl Handler<NewNametag> for DbExecutor {
     }
 }
 
+// GetNametags
+
 pub struct GetNametags;
 
 impl Message for GetNametags {
@@ -114,19 +121,3 @@ impl Handler<GetNametags> for DbExecutor {
         Ok(ret)
     }
 }
-    
-
-// pub fn new_nametag(conn: &SqliteConnection, name: &str, comments: Option<&str>) {
-//     use self::schema;
-//     use diesel;
-//
-//     let new_nametag = NewNametag {
-//         name: name,
-//         comments: comments
-//     };
-//
-// }
-
-// pub fn get_nametags(conn: &SqliteConnection) -> Vec<Nametag> {
-//     schema::nametags::dsl::nametags.load::<Nametag>(conn).expect("Error loading nametags")
-// }

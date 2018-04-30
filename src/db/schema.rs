@@ -1,10 +1,18 @@
+#[derive(Debug, DbEnum, Serialize)]
+pub enum PrinterState {
+    Idle,
+    Printing,
+    Done,
+    Unavailable
+}
+
 table! {
+    use diesel::sql_types::*;
+    use super::PrinterStateMapping;
     printers (id) {
         id -> Integer,
         name -> Text,
-        status -> Text,
-        active -> Bool,
-        selectable -> Bool,
+        status -> PrinterStateMapping,
         nametag_id -> Nullable<Integer>,
         color -> Text,
         ip -> Text,

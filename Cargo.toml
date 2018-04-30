@@ -26,6 +26,7 @@ lazy_static = "1.0"
 phf = "0.7"
 includedir = "0.4"
 tempfile = "3.0"
+diesel-derive-enum = { version = "0.4", features = ["sqlite"] }
 
 [build-dependencies]
 includedir_codegen = "0.4"
