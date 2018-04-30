@@ -16,13 +16,13 @@ pub struct Printer {
 
 #[derive(Insertable)]
 #[table_name = "printers"]
-pub struct NewPrinter<'a> {
-    pub name: &'a str,
-    pub status: &'a str,
-    pub color: &'a str,
-    pub ip: &'a str,
-    pub api_key: &'a str,
-    pub slic3r_conf: &'a str
+pub struct NewPrinter {
+    pub name: String,
+    pub status: String,
+    pub color: String,
+    pub ip: String,
+    pub api_key: String,
+    pub slic3r_conf: String
 }
 
 use super::schema::nametags;

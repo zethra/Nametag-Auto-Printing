@@ -35,9 +35,6 @@ pub fn init() {
             .execute(&conn)
             .expect("Fail to init db");
     }
-    // ::diesel::sql_query(setup_query)
-    //     .execute(&conn)
-    //     .expect("Fail to init db");
 }
 
 
@@ -46,27 +43,40 @@ pub fn establish_connection() -> ConnectionManager<SqliteConnection> {
     ConnectionManager::<SqliteConnection>::new(database_url)
 }
 
-pub fn new_printer(conn: &SqliteConnection, name: &str, color: &str, ip: &str, api_key: &str, slic3r_conf: &str) {
-    use self::schema;
-    use diesel;
-    
-    let new_printer = NewPrinter {
-        name: name,
-        status: "offline",
-        color: color,
-        ip: ip,
-        api_key: api_key,
-        slic3r_conf: slic3r_conf
-    };
-
-    diesel::insert_into(schema::printers::table)
-        .values(new_printer)
-        .execute(conn)
-        .expect("Error saving printer");
+impl Message for NewPrinter {
+    type Result = Result<(), Error>;
 }
 
-pub fn get_printers(conn: &SqliteConnection) -> Vec<Printer> {
-    schema::printers::dsl::printers.load::<Printer>(conn).expect("Error loading printers")
+impl Handler<NewPrinter> for DbExecutor {
+    type Result = Result<(), Error>;
+
+    fn handle(&mut self, msg: NewPrinter, _: &mut Self::Context) -> Self::Result {
+        use diesel;
+
+        let conn: &SqliteConnection = &self.0.get().unwrap();
+        diesel::insert_into(schema::printers::table)
+            .values(msg)
+            .execute(conn)
+            .map_err(|_| error::ErrorInternalServerError("Error instering printer"))?;
+        Ok(())
+    }
+}
+
+pub struct GetPrinters;
+
+impl Message for GetPrinters {
+    type Result = Result<Vec<Printer>, Error>;
+}
+
+impl Handler<GetPrinters> for DbExecutor {
+    type Result = Result<Vec<Printer>, Error>;
+
+    fn handle(&mut self, _:GetPrinters, _: &mut Self::Context) -> Self::Result {
+        let conn: &SqliteConnection = &self.0.get().unwrap();
+        let ret = schema::printers::dsl::printers.load::<Printer>(conn)
+            .map_err(|_| error::ErrorInternalServerError("Error loading printers"))?;
+        Ok(ret)
+    }
 }
 
 impl Message for NewNametag {
@@ -100,7 +110,7 @@ impl Handler<GetNametags> for DbExecutor {
     fn handle(&mut self, _:GetNametags, _: &mut Self::Context) -> Self::Result {
         let conn: &SqliteConnection = &self.0.get().unwrap();
         let ret = schema::nametags::dsl::nametags.load::<Nametag>(conn)
-            .map_err(|_| error::ErrorInternalServerError("Error loading printers"))?;
+            .map_err(|_| error::ErrorInternalServerError("Error loading nametags"))?;
         Ok(ret)
     }
 }
