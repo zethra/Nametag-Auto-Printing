@@ -36,7 +36,7 @@ pub struct Nametag {
 
 #[derive(Insertable)]
 #[table_name = "nametags"]
-pub struct NewNametag<'a> {
-    pub name: &'a str,
-    pub comments: Option<&'a str>
+pub struct NewNametag {
+    pub name: String,
+    pub comments: Option<String>
 }

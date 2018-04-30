@@ -1,13 +1,22 @@
 pub mod schema;
 pub mod models;
 
+use actix_web::*;
+use actix::prelude::*;
 use diesel::prelude::*;
+use diesel::r2d2::{Pool, ConnectionManager};
 use self::models::*;
 use std::fs::File;
 use std::path::Path;
 use std::io::Read;
 
 include!(concat!(env!("OUT_DIR"), "/db_setup.rs"));
+
+pub struct DbExecutor(pub Pool<ConnectionManager<SqliteConnection>>);
+
+impl Actor for DbExecutor {
+    type Context = SyncContext<Self>;
+}
 
 pub fn init() {
     let db_file_path = Path::new("nametag.db");
@@ -32,10 +41,9 @@ pub fn init() {
 }
 
 
-pub fn establish_connection() -> SqliteConnection {
+pub fn establish_connection() -> ConnectionManager<SqliteConnection> {
     let database_url = "nametag.db";
-    SqliteConnection::establish(database_url)
-        .expect(&format!("Error connecting to {}", database_url))
+    ConnectionManager::<SqliteConnection>::new(database_url)
 }
 
 pub fn new_printer(conn: &SqliteConnection, name: &str, color: &str, ip: &str, api_key: &str, slic3r_conf: &str) {
@@ -61,21 +69,54 @@ pub fn get_printers(conn: &SqliteConnection) -> Vec<Printer> {
     schema::printers::dsl::printers.load::<Printer>(conn).expect("Error loading printers")
 }
 
-pub fn new_nametag(conn: &SqliteConnection, name: &str, comments: Option<&str>) {
-    use self::schema;
-    use diesel;
-
-    let new_nametag = NewNametag {
-        name: name,
-        comments: comments
-    };
-
-    diesel::insert_into(schema::nametags::table)
-        .values(new_nametag)
-        .execute(conn)
-        .expect("Error saving nametag");
+impl Message for NewNametag {
+    type Result = Result<(), Error>;
 }
 
-pub fn get_nametags(conn: &SqliteConnection) -> Vec<Nametag> {
-    schema::nametags::dsl::nametags.load::<Nametag>(conn).expect("Error loading nametags")
+impl Handler<NewNametag> for DbExecutor {
+    type Result = Result<(), Error>;
+
+    fn handle(&mut self, msg: NewNametag, _: &mut Self::Context) -> Self::Result {
+        use diesel;
+
+        let conn: &SqliteConnection = &self.0.get().unwrap();
+        diesel::insert_into(schema::nametags::table)
+            .values(msg)
+            .execute(conn)
+            .map_err(|_| error::ErrorInternalServerError("Error instering nametag"))?;
+        Ok(())
+    }
 }
+
+pub struct GetNametags;
+
+impl Message for GetNametags {
+    type Result = Result<Vec<Nametag>, Error>;
+}
+
+impl Handler<GetNametags> for DbExecutor {
+    type Result = Result<Vec<Nametag>, Error>;
+
+    fn handle(&mut self, _:GetNametags, _: &mut Self::Context) -> Self::Result {
+        let conn: &SqliteConnection = &self.0.get().unwrap();
+        let ret = schema::nametags::dsl::nametags.load::<Nametag>(conn)
+            .map_err(|_| error::ErrorInternalServerError("Error loading printers"))?;
+        Ok(ret)
+    }
+}
+    
+
+// pub fn new_nametag(conn: &SqliteConnection, name: &str, comments: Option<&str>) {
+//     use self::schema;
+//     use diesel;
+//
+//     let new_nametag = NewNametag {
+//         name: name,
+//         comments: comments
+//     };
+//
+// }
+
+// pub fn get_nametags(conn: &SqliteConnection) -> Vec<Nametag> {
+//     schema::nametags::dsl::nametags.load::<Nametag>(conn).expect("Error loading nametags")
+// }

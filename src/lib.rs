@@ -7,6 +7,9 @@ extern crate phf;
 extern crate tempfile;
 #[macro_use]
 extern crate lazy_static;
+extern crate actix;
+extern crate actix_web;
+extern crate r2d2;
 
 
 pub mod nametag;
