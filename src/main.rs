@@ -87,6 +87,17 @@ fn list_printers(req: HttpRequest<AppState>) -> FutureResponse<HttpResponse> {
         }).responder()
 }
 
+fn list_idle_printers(req: HttpRequest<AppState>) -> FutureResponse<HttpResponse> {
+    req.state().db.send(GetIdlePrinters{})
+        .from_err()
+        .and_then(|res| {
+            match res {
+                Ok(res) => Ok(HttpResponse::Ok().json(res)),
+                Err(_) => Ok(HttpResponse::InternalServerError().into())
+            }
+        }).responder()
+}
+
 fn main() {
     ::std::env::set_var("RUST_LOG", "actix_web=info");
     let _ = env_logger::init();
@@ -111,6 +122,7 @@ fn main() {
             .resource("/submit", |r| r.method(Method::POST).with2(submit))
             .resource("/nametags", |r| r.f(list_nametags))
             .resource("/printers", |r| r.f(list_printers))
+            .resource("/printers/idle", |r| r.f(list_idle_printers))
         })
         .bind("127.0.0.1:8080").unwrap()
         .shutdown_timeout(1)

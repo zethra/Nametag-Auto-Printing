@@ -6,6 +6,7 @@ use actix::prelude::*;
 use diesel::prelude::*;
 use diesel::r2d2::{Pool, ConnectionManager};
 use self::models::*;
+use self::schema::PrinterState;
 use std::fs::File;
 use std::path::Path;
 use std::io::Read;
@@ -77,6 +78,26 @@ impl Handler<GetPrinters> for DbExecutor {
     fn handle(&mut self, _:GetPrinters, _: &mut Self::Context) -> Self::Result {
         let conn: &SqliteConnection = &self.0.get().unwrap();
         let ret = schema::printers::dsl::printers.load::<Printer>(conn)
+            .map_err(|_| error::ErrorInternalServerError("Error loading printers"))?;
+        Ok(ret)
+    }
+}
+
+// GetIdlePrinters
+
+pub struct GetIdlePrinters;
+
+impl Message for GetIdlePrinters {
+    type Result = Result<Vec<Printer>, Error>;
+}
+
+impl Handler<GetIdlePrinters> for DbExecutor {
+    type Result = Result<Vec<Printer>, Error>;
+
+    fn handle(&mut self, _:GetIdlePrinters, _: &mut Self::Context) -> Self::Result {
+        use self::schema::printers::dsl::*;
+        let conn: &SqliteConnection = &self.0.get().unwrap();
+        let ret = printers.filter(status.eq(PrinterState::Idle)).load::<Printer>(conn)
             .map_err(|_| error::ErrorInternalServerError("Error loading printers"))?;
         Ok(ret)
     }
