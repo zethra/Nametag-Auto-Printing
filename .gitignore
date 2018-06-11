@@ -1,6 +1,5 @@
 *.lock
 /target
-frontend/index/target
 **/*.rs.bk
 *.db
 static/*.js
