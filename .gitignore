@@ -5,3 +5,5 @@ frontend/index/target
 *.db
 static/*.js
 static/*.wasm
+.idea
+

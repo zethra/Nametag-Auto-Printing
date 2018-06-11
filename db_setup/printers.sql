@@ -1,11 +1,10 @@
 CREATE TABLE IF NOT EXISTS printers (
-    id INTEGER NOT NULL PRIMARY KEY,
-    name VARCHAR NOT NULL,
-    status VARCHAR CHECK(status IN ('idle', 'printing', 'done', 'unavailable')) NOT NULL,
-    nametag_id INTEGER,
-    color VARCHAR NOT NULL,
-    api_key VARCHAR NOT NULL,
-    ip VARCHAR NOT NULL,
-    slic3r_conf VARCHAR NOT NULL
+    printer_id INTEGER NOT NULL PRIMARY KEY,
+    printer_name VARCHAR NOT NULL,
+    printer_status VARCHAR CHECK(printer_status IN ('idle', 'printing', 'done', 'unavailable')) NOT NULL,
+    printer_color VARCHAR NOT NULL,
+    printer_api_key VARCHAR NOT NULL,
+    printer_ip VARCHAR NOT NULL,
+    printer_slic3r_conf VARCHAR NOT NULL
 );
 

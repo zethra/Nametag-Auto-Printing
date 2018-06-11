@@ -76,8 +76,9 @@ impl Handler<GetPrinters> for DbExecutor {
     type Result = Result<Vec<Printer>, Error>;
 
     fn handle(&mut self, _:GetPrinters, _: &mut Self::Context) -> Self::Result {
+        use self::schema::printers::dsl::*;
         let conn: &SqliteConnection = &self.0.get().unwrap();
-        let ret = schema::printers::dsl::printers.load::<Printer>(conn)
+        let ret = printers.load::<Printer>(conn)
             .map_err(|_| error::ErrorInternalServerError("Error loading printers"))?;
         Ok(ret)
     }
@@ -97,7 +98,7 @@ impl Handler<GetIdlePrinters> for DbExecutor {
     fn handle(&mut self, _:GetIdlePrinters, _: &mut Self::Context) -> Self::Result {
         use self::schema::printers::dsl::*;
         let conn: &SqliteConnection = &self.0.get().unwrap();
-        let ret = printers.filter(status.eq(PrinterState::Idle)).load::<Printer>(conn)
+        let ret = printers.filter(printer_status.eq(PrinterState::Idle)).load::<Printer>(conn)
             .map_err(|_| error::ErrorInternalServerError("Error loading printers"))?;
         Ok(ret)
     }
@@ -136,8 +137,29 @@ impl Handler<GetNametags> for DbExecutor {
     type Result = Result<Vec<Nametag>, Error>;
 
     fn handle(&mut self, _:GetNametags, _: &mut Self::Context) -> Self::Result {
+        use self::schema::nametags::dsl::*;
         let conn: &SqliteConnection = &self.0.get().unwrap();
-        let ret = schema::nametags::dsl::nametags.load::<Nametag>(conn)
+        let ret = nametags.load::<Nametag>(conn)
+            .map_err(|_| error::ErrorInternalServerError("Error loading nametags"))?;
+        Ok(ret)
+    }
+}
+
+// GetNametagsToPrint
+
+pub struct GetNametagsToPrint;
+
+impl Message for GetNametagsToPrint {
+    type Result = Result<Vec<Nametag>, Error>;
+}
+
+impl Handler<GetNametagsToPrint> for DbExecutor {
+    type Result = Result<Vec<Nametag>, Error>;
+
+    fn handle(&mut self, _:GetNametagsToPrint, _: &mut Self::Context) -> Self::Result {
+        use self::schema::nametags::dsl::*;
+        let conn: &SqliteConnection = &self.0.get().unwrap();
+        let ret = nametags.load::<Nametag>(conn)
             .map_err(|_| error::ErrorInternalServerError("Error loading nametags"))?;
         Ok(ret)
     }

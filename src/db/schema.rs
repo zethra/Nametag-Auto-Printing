@@ -9,22 +9,22 @@ pub enum PrinterState {
 table! {
     use diesel::sql_types::*;
     use super::PrinterStateMapping;
-    printers (id) {
-        id -> Integer,
-        name -> Text,
-        status -> PrinterStateMapping,
-        nametag_id -> Nullable<Integer>,
-        color -> Text,
-        ip -> Text,
-        api_key -> Text,
-        slic3r_conf -> Text,
+    printers (printer_id) {
+        printer_id -> Integer,
+        printer_name -> Text,
+        printer_status -> PrinterStateMapping,
+        printer_color -> Text,
+        printer_ip -> Text,
+        printer_api_key -> Text,
+        printer_slic3r_conf -> Text,
     }
 }
 
 table! {
-    nametags (id) {
-        id -> Integer,
-        name -> Text,
-        comments -> Nullable<Text>,
+    nametags (nametag_id) {
+        nametag_id -> Integer,
+        nametag_name -> Text,
+        nametag_printer_id -> Nullable<Integer>,
+        nametag_comments -> Nullable<Text>,
     }
 }

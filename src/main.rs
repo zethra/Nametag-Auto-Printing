@@ -55,7 +55,7 @@ struct SubmitForm {
 }
 
 fn submit(form: Form<SubmitForm>, state: State<AppState>) -> FutureResponse<HttpResponse> {
-    state.db.send(NewNametag{name:form.name.clone(), comments: None})
+    state.db.send(NewNametag{nametag_name:form.name.clone(), nametag_comments: None})
         .from_err()
         .and_then(|res| {
             match res {
